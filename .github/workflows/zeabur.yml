@@ -1,0 +1,25 @@
+name: Deploy to Zeabur
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install CLI
+        run: npm install -g zeabur
+
+      - name: Deploy
+        env:
+          ZEABUR_TOKEN: ${{ secrets.ZEABUR_TOKEN }}
+        run: |
+          zeabur login --token "$ZEABUR_TOKEN"
+          zeabur deploy --yes
